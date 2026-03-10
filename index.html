@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook Lite</title>
+    <link rel="stylesheet" href="prism-tomorrow.min.css">
+    <style>
+        :root {
+            --primary: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --bg: #f8fafc;
+            --sidebar-bg: rgba(255, 255, 255, 0.8);
+            --sidebar-hover: rgba(99, 102, 241, 0.08);
+            --border: rgba(226, 232, 240, 0.8);
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            margin: 4px 12px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background-color: rgba(226, 232, 240, 0.4);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: 1px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background-color: var(--sidebar-hover);
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .sidebar-item.active {
+            background-color: var(--accent);
+            color: #fff;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-view-all {
+            margin: 20px 12px;
+            padding: 12px;
+            background: rgba(226, 232, 240, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary);
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-view-all:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: var(--shadow);
+            transform: translateY(-1px);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.2s;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .github-link:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 20px 40px;
+            overflow-y: auto;
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.03), transparent);
+        }
+
+        .note-card {
+            background: var(--card-bg);
+            padding: 30px 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            max-width: 1100px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+        }
+
+        .note-content {
+            font-size: 1.1rem;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .note-content h1,
+        .note-content h2,
+        .note-content h3 {
+            margin-top: 1.25em;
+            margin-bottom: 0.5em;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        .note-content p {
+            margin-bottom: 1em;
+        }
+
+        .note-content ul,
+        .note-content ol {
+            margin-left: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        /* Setup / Welcome */
+        #setupView {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.05), transparent),
+                radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+        }
+
+        .setup-card {
+            width: 100%;
+            max-width: 480px;
+            padding: 48px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .setup-card h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.05em;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0 24px 0;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .note-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.05em;
+            color: var(--primary);
+        }
+
+        .note-meta {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        pre[class*="language-"] {
+            border-radius: var(--radius-md);
+            margin: 32px 0;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        /* Overlay / Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 60px 40px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto 60px auto;
+        }
+
+        .modal-close {
+            font-size: 40px;
+            cursor: pointer;
+            color: var(--text-muted);
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        .view-all-item {
+            max-width: 1100px;
+            margin: 0 auto 80px auto;
+            padding-bottom: 60px;
+            border-bottom: 1.5px solid var(--border);
+        }
+
+        .view-all-item h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        #error {
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-top: 20px;
+            border: 1px solid #fecaca;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .note-card {
+                padding: 30px;
+            }
+        }
+
+        #passwordModal .setup-card {
+            margin: 100px auto;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="setupView">
+        <div class="setup-card">
+            <h1>Notebook Lite</h1>
+            <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Enter PrivateBin details to
+                access your notebook.</p>
+            <label>URL</label>
+            <input type="text" id="url" class="input-field" placeholder="https://privatebin.net/?...#key">
+            <label>Symmetric Key</label>
+            <input type="text" id="key" class="input-field" placeholder="Extracted from URL if left blank">
+            <label>Password (optional)</label>
+            <input type="password" id="password" class="input-field" placeholder="Enter password if required">
+            <button id="decryptBtn" class="btn btn-primary" onclick="window.app.decrypt()">Load Notebook</button>
+            <div id="error"></div>
+        </div>
+    </div>
+
+    <div id="mainView" style="display:none">
+        <div class="app-container">
+            <aside class="sidebar">
+                <button class="btn btn-view-all" onclick="window.app.openViewAll()">View All</button>
+                <div id="sidebarNoteList"></div>
+            </aside>
+            <main class="content-area">
+                <div class="content-header">
+                    <h1 id="notebookName" style="color: var(--primary); font-weight: 700; margin: 0;"></h1>
+                    <a href="https://github.com/privapps/notebook-lite" target="_blank" class="github-link">
+                        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor"
+                            style="display: inline-block; vertical-align: middle;">
+                            <path
+                                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                            </path>
+                        </svg>
+                        View on GitHub
+                    </a>
+                </div>
+                <p id="notebookDescription"
+                    style="color: var(--text-muted); margin-top: -25px; margin-bottom: 30px; font-size: 1.1rem; display: none;">
+                </p>
+                <div class="note-card">
+                    <h2 id="noteTitle" class="note-title"></h2>
+                    <div id="noteMeta" class="note-meta"></div>
+                    <div id="noteContent" class="note-content"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="viewAllModal" class="modal">
+        <div class="modal-header">
+            <h1>All Notes</h1>
+            <span class="modal-close" onclick="window.app.closeViewAll()">&times;</span>
+        </div>
+        <div id="viewAllContent"></div>
+    </div>
+
+    <div id="passwordModal" class="modal">
+        <div class="setup-card">
+            <h2>Password Required</h2>
+            <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">This paste is password
+                protected.</p>
+            <input type="password" id="modalPassword" class="input-field" placeholder="Enter password">
+            <button id="modalSubmitBtn" class="btn btn-primary">Decrypt</button>
+            <div id="modalError"
+                style="color: #d32f2f; font-size: 0.8rem; margin-top: 15px; text-align: center; display: none;"></div>
+        </div>
+    </div>
+
+    <script src="marked.min.js"></script>
+    <script src="prism.min.js"></script>
+    <script src="prism-javascript.min.js"></script>
+    <script src="prism-python.min.js"></script>
+    <script src="prism-json.min.js"></script>
+    <script src="base-x-3.0.7.js"></script>
+    <script src="rawinflate-0.3.js"></script>
+
+    <script>
+        (function () {
+            var _decryptionRetryCount = 0;
+            var _MAX_RETRIES = 3;
+            var currentNotes = [];
+            var currentMetadata = {};
+
+            var base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
+
+            function bytesToLatin1(bytes) { return new TextDecoder('latin1').decode(bytes); }
+            function latin1ToBytes(str) {
+                var bytes = new Uint8Array(str.length);
+                for (var i = 0; i < str.length; i++) bytes[i] = str.charCodeAt(i);
+                return bytes;
+            }
+            function utf8ToBytes(str) { return new TextEncoder().encode(str); }
+            function bytesToUtf8(bytes) { return new TextDecoder().decode(bytes); }
+            function utf8To16(message) {
+                try { return bytesToUtf8(latin1ToBytes(message)); }
+                catch (e) { return message; }
+            }
+            function keyFromBase58(newKey) {
+                var decoded = base58.decode(newKey);
+                var bytes = new Uint8Array(32);
+                bytes.set(decoded.slice(-32));
+                return bytes;
+            }
+
+            async function decompress(data, mode) {
+                if (mode === 'none') return bytesToUtf8(data);
+                for (var format of ['deflate-raw', 'deflate']) {
+                    try {
+                        var ds = new DecompressionStream(format);
+                        var stream = new Response(data).body.pipeThrough(ds);
+                        var result = await new Response(stream).arrayBuffer();
+                        return bytesToUtf8(new Uint8Array(result));
+                    } catch (e) { }
+                }
+                try {
+                    var inflated = RawDeflate.inflate(bytesToLatin1(data));
+                    return utf8To16(inflated);
+                } catch (e) {
+                    if (data[0] === 0x78) {
+                        try {
+                            var inflated = RawDeflate.inflate(bytesToLatin1(data.slice(2)));
+                            return utf8To16(inflated);
+                        } catch (e3) { }
+                    }
+                    throw new Error('Decompression failed');
+                }
+            }
+
+            async function deriveKey(masterKeyBytes, password, spec) {
+                var ikm = masterKeyBytes;
+                if (password.length > 0) {
+                    var passwordHash;
+                    if (spec[7] === 'rawdeflate') {
+                        var hashBuffer = await crypto.subtle.digest('SHA-256', utf8ToBytes(password));
+                        passwordHash = Array.from(new Uint8Array(hashBuffer)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+                    } else { passwordHash = password; }
+                    var passwordBytes = utf8ToBytes(passwordHash);
+                    var combined = new Uint8Array(ikm.length + passwordBytes.length);
+                    combined.set(ikm); combined.set(passwordBytes, ikm.length);
+                    ikm = combined;
+                }
+                var importedKey = await crypto.subtle.importKey('raw', ikm, 'PBKDF2', false, ['deriveKey']);
+                return crypto.subtle.deriveKey(
+                    { name: 'PBKDF2', salt: latin1ToBytes(atob(spec[1])), iterations: spec[2], hash: 'SHA-256' },
+                    importedKey,
+                    { name: 'AES-' + spec[6].toUpperCase(), length: spec[3] },
+                    false, ['decrypt']
+                );
+            }
+
+            async function decipher(masterKeyBytes, password, data) {
+                var adataString = JSON.stringify(data[1]);
+                var spec = data[1][0];
+                var cipherMessage = data[0];
+                var derivedKey = await deriveKey(masterKeyBytes, password, spec);
+                var plaintext = await crypto.subtle.decrypt(
+                    { name: 'AES-' + spec[6].toUpperCase(), iv: latin1ToBytes(atob(spec[0])), additionalData: utf8ToBytes(adataString), tagLength: spec[4] },
+                    derivedKey,
+                    latin1ToBytes(atob(cipherMessage))
+                );
+                return await decompress(new Uint8Array(plaintext), spec[7]);
+            }
+
+            async function fetchPrivateBin(url) {
+                var urlObj = new URL(url);
+                var pasteId = urlObj.search.split('?')[1] || urlObj.pathname.split('/').filter(function (p) { return p; })[0];
+                var response = await fetch(urlObj.origin + '/' + pasteId);
+                if (!response.ok) throw new Error('Fetch failed: ' + response.status);
+                return await response.json();
+            }
+
+            function displayNote(index) {
+                var note = currentNotes[index];
+                if (!note) return;
+                document.getElementById('noteTitle').textContent = note.name || 'Untitled';
+
+                var metaHtml = '';
+                if (note.date) metaHtml += '<span>' + note.date + '</span>';
+                if (note.tags) metaHtml += '<span style="margin-left:15px; opacity: 0.7;">' + (Array.isArray(note.tags) ? note.tags.join(', ') : note.tags) + '</span>';
+                document.getElementById('noteMeta').innerHTML = metaHtml;
+                document.getElementById('noteMeta').style.display = metaHtml ? 'flex' : 'none';
+
+                document.getElementById('noteContent').innerHTML = marked.parse(note.content || '');
+                Prism.highlightAll();
+                document.querySelectorAll('.sidebar-item').forEach(function (item, idx) {
+                    if (idx === index) item.classList.add('active');
+                    else item.classList.remove('active');
+                });
+                window.scrollTo({ top: 0 });
+            }
+
+            function updateUI() {
+                var sidebar = document.getElementById('sidebarNoteList');
+                sidebar.innerHTML = '';
+                currentNotes.forEach(function (note, index) {
+                    var div = document.createElement('div');
+                    div.className = 'sidebar-item';
+                    div.textContent = note.name || 'Untitled';
+                    div.onclick = function () { displayNote(index); };
+                    sidebar.appendChild(div);
+                });
+                var viewAll = document.getElementById('viewAllContent');
+                viewAll.innerHTML = currentNotes.map(function (note) {
+                    return `
+                    <div class="view-all-item">
+                        <h2>${note.name || 'Untitled'}</h2>
+                        <div>${marked.parse(note.content || '')}</div>
+                    </div>
+                `;
+                }).join('');
+                Prism.highlightAllUnder(viewAll);
+            }
+
+            async function attemptDecryption(data, key, password) {
+                var decryptedStr = await decipher(keyFromBase58(key), password, [data.ct, data.adata]);
+                function parse(obj) {
+                    if (Array.isArray(obj)) { currentNotes = Array.isArray(obj[0]) ? obj[0] : [obj[0]]; currentMetadata = obj[1] || {}; return true; }
+                    if (obj && obj.paste) {
+                        try { return parse(JSON.parse(obj.paste)); }
+                        catch (e) { currentNotes = [{ name: 'Paste', content: obj.paste }]; currentMetadata = obj.meta || {}; return true; }
+                    }
+                    if (obj && obj.content) { currentNotes = [{ name: 'Content', content: obj.content }]; currentMetadata = obj.meta || {}; return true; }
+                    return false;
+                }
+                try { if (!parse(JSON.parse(decryptedStr))) currentNotes = [{ name: 'Note', content: decryptedStr }]; }
+                catch (e) { currentNotes = [{ name: 'Note', content: decryptedStr }]; }
+
+                currentNotes = currentNotes.map(function (n) {
+                    if (typeof n === 'string') return { name: 'Note', content: n };
+                    var res = Object.assign({}, n);
+                    res.name = n.name || n.title || 'Untitled';
+                    res.content = n.content || n.text || '';
+                    return res;
+                });
+                document.getElementById('setupView').style.display = 'none';
+                document.getElementById('passwordModal').style.display = 'none';
+                document.getElementById('mainView').style.display = 'block';
+                document.getElementById('notebookName').textContent = currentMetadata.name || 'Notebook';
+                var descEl = document.getElementById('notebookDescription');
+                if (descEl) {
+                    descEl.textContent = currentMetadata.description || '';
+                    descEl.style.display = currentMetadata.description ? 'block' : 'none';
+                }
+                updateUI();
+                if (currentNotes.length > 0) displayNote(0);
+                var urlInputText = document.getElementById('url').value.trim();
+                var shareUrl = window.location.origin + window.location.pathname + '#' + key + '@' + encodeURIComponent(urlInputText);
+                window.history.replaceState(null, '', shareUrl);
+            }
+
+            async function getNotebookData(url) {
+                if (url.startsWith('http')) return await fetchPrivateBin(url);
+                try {
+                    var normalized = url.replace(/\./g, '/').replace(/-/g, '+').replace(/_/g, '/');
+                    while (normalized.length % 4 !== 0) normalized += '=';
+                    return JSON.parse(bytesToUtf8(latin1ToBytes(atob(normalized))));
+                } catch (e) {
+                    throw new Error('Invalid inline data format: ' + e.message);
+                }
+            }
+
+            function showPasswordModal(url, key) {
+                var modal = document.getElementById('passwordModal');
+                var submitBtn = document.getElementById('modalSubmitBtn');
+                var pwdInput = document.getElementById('modalPassword');
+                var errEl = document.getElementById('modalError');
+                modal.style.display = 'block';
+                errEl.style.display = 'none';
+                pwdInput.value = '';
+                pwdInput.focus();
+                submitBtn.onclick = async function () {
+                    var password = pwdInput.value;
+                    submitBtn.disabled = true; submitBtn.textContent = 'Decrypting...';
+                    errEl.style.display = 'none';
+                    try {
+                        var data = await getNotebookData(url);
+                        await attemptDecryption(data, key, password);
+                    } catch (err) {
+                        _decryptionRetryCount++;
+                        if (_decryptionRetryCount >= _MAX_RETRIES) {
+                            modal.style.display = 'none';
+                            var mainErr = document.getElementById('error');
+                            mainErr.textContent = 'Too many failed attempts. Decryption failed.';
+                            mainErr.style.display = 'block';
+                        } else {
+                            errEl.textContent = 'Incorrect password. ' + (_MAX_RETRIES - _decryptionRetryCount) + ' attempts remaining.';
+                            errEl.style.display = 'block';
+                            pwdInput.value = ''; pwdInput.focus();
+                        }
+                    } finally {
+                        submitBtn.disabled = false; submitBtn.textContent = 'Decrypt';
+                    }
+                };
+                pwdInput.onkeypress = function (e) { if (e.key === 'Enter') submitBtn.click(); };
+            }
+
+            // Public API for HTML onclicks
+            window.app = {
+                decrypt: async function () {
+                    var errEl = document.getElementById('error');
+                    errEl.style.display = 'none';
+                    var urlInput = document.getElementById('url');
+                    var keyInput = document.getElementById('key');
+                    var pwdInput = document.getElementById('password');
+                    var url = urlInput.value.trim();
+                    var key = keyInput.value.trim();
+                    if (!url) { errEl.textContent = 'Enter URL or Content'; errEl.style.display = 'block'; return; }
+                    var btn = document.getElementById('decryptBtn');
+                    btn.disabled = true; btn.textContent = 'Decrypting...';
+                    try {
+                        var data = await getNotebookData(url);
+                        if (!key && url.startsWith('http')) { try { key = new URL(url).hash.substring(1); } catch (e) { } }
+                        if (!key) throw new Error('No key found');
+                        _decryptionRetryCount = 0;
+                        await attemptDecryption(data, key, pwdInput.value);
+                    } catch (err) {
+                        if (err.name === 'OperationError' || err.message.includes('decryption failed')) {
+                            showPasswordModal(url, key);
+                        } else {
+                            errEl.textContent = err.message || 'Error';
+                            errEl.style.display = 'block';
+                        }
+                    } finally {
+                        btn.disabled = false; btn.textContent = 'Load Notebook';
+                    }
+                },
+                openViewAll: function () { document.getElementById('viewAllModal').style.display = 'block'; },
+                closeViewAll: function () { document.getElementById('viewAllModal').style.display = 'none'; }
+            };
+
+            function initApp() {
+                function getParam(name) {
+                    var searchParams = new URLSearchParams(window.location.search);
+                    if (searchParams.has(name)) return searchParams.get(name);
+                    var hashPart = window.location.hash.substring(1);
+                    var decodedHash = decodeURIComponent(hashPart);
+                    var hashParams = new URLSearchParams(decodedHash.split(/[?&]/).slice(1).join('&'));
+                    if (hashParams.has(name)) return hashParams.get(name);
+                    if (!hashPart.includes('@')) {
+                        var simpleParams = new URLSearchParams(decodedHash);
+                        if (simpleParams.has(name)) return simpleParams.get(name);
+                    }
+                    return null;
+                }
+
+                var urlInput = document.getElementById('url');
+                var keyInput = document.getElementById('key');
+                var pwdInput = document.getElementById('password');
+                if (!urlInput || !keyInput || !pwdInput) return;
+
+                var urlVal = getParam('url');
+                var keyVal = getParam('key');
+                var pwdVal = getParam('pwd') || getParam('password');
+
+                if (urlVal) urlInput.value = urlVal;
+                if (keyVal) keyInput.value = keyVal;
+                if (pwdVal) pwdInput.value = pwdVal;
+
+                var hashPart = window.location.hash.substring(1);
+                if (hashPart.includes('@')) {
+                    var parts = hashPart.split('@');
+                    var keyPart = parts[0];
+                    var urlPart = decodeURIComponent(parts[1]).split(/[?&]/)[0];
+                    if (!urlInput.value && urlPart) urlInput.value = urlPart;
+                    if (!keyInput.value && keyPart) keyInput.value = keyPart;
+                } else if (hashPart.length > 20 && !hashPart.includes('=') && !hashPart.includes('&')) {
+                    if (!keyInput.value) keyInput.value = hashPart;
+                }
+
+                if (urlInput.value && keyInput.value) { setTimeout(window.app.decrypt, 100); }
+
+                window.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        window.app.closeViewAll();
+                        var pm = document.getElementById('passwordModal');
+                        if (pm) pm.style.display = 'none';
+                    }
+                });
+            }
+
+            if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initApp); }
+            else { initApp(); }
+        })();
+    </script>
+</body>
+
+</html>
