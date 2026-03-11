@@ -535,9 +535,12 @@
             }
 
             async function fetchPrivateBin(url) {
-                var urlObj = new URL(url);
-                var pasteId = urlObj.search.split('?')[1] || urlObj.pathname.split('/').filter(function (p) { return p; })[0];
-                var response = await fetch(urlObj.origin + '/' + pasteId);
+                var fetchUrl = url.split('#')[0];
+                var response = await fetch(fetchUrl, {
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*'
+                    }
+                });
                 if (!response.ok) throw new Error('Fetch failed: ' + response.status);
                 return await response.json();
             }
@@ -563,29 +566,38 @@
             }
 
             function updateUI() {
-                var sidebar = document.getElementById('sidebarNoteList');
-                sidebar.innerHTML = '';
-                currentNotes.forEach(function (note, index) {
-                    var div = document.createElement('div');
-                    div.className = 'sidebar-item';
-                    div.textContent = note.name || 'Untitled';
-                    div.onclick = function () { displayNote(index); };
-                    sidebar.appendChild(div);
-                });
+                var sidebarEl = document.querySelector('.sidebar');
+                if (sidebarEl) sidebarEl.style.display = currentNotes.length > 1 ? 'flex' : 'none';
+
+                var sidebarList = document.getElementById('sidebarNoteList');
+                if (sidebarList) {
+                    sidebarList.innerHTML = '';
+                    currentNotes.forEach(function (note, index) {
+                        var div = document.createElement('div');
+                        div.className = 'sidebar-item';
+                        div.textContent = note.name || 'Untitled';
+                        div.onclick = function () { displayNote(index); };
+                        sidebarList.appendChild(div);
+                    });
+                }
+
                 var viewAll = document.getElementById('viewAllContent');
-                viewAll.innerHTML = currentNotes.map(function (note) {
-                    return `
-                    <div class="view-all-item">
-                        <h2>${note.name || 'Untitled'}</h2>
-                        <div>${marked.parse(note.content || '')}</div>
-                    </div>
-                `;
-                }).join('');
-                Prism.highlightAllUnder(viewAll);
+                if (viewAll) {
+                    viewAll.innerHTML = currentNotes.map(function (note) {
+                        return `
+                        <div class="view-all-item">
+                            <h2>${note.name || 'Untitled'}</h2>
+                            <div>${marked.parse(note.content || '')}</div>
+                        </div>
+                    `;
+                    }).join('');
+                    Prism.highlightAllUnder(viewAll);
+                }
             }
 
             async function attemptDecryption(data, key, password) {
                 var decryptedStr = await decipher(keyFromBase58(key), password, [data.ct, data.adata]);
+                // console.log("wtf", decryptedStr);
                 function parse(obj) {
                     if (Array.isArray(obj)) { currentNotes = Array.isArray(obj[0]) ? obj[0] : [obj[0]]; currentMetadata = obj[1] || {}; return true; }
                     if (obj && obj.paste) {
@@ -597,7 +609,6 @@
                 }
                 try { if (!parse(JSON.parse(decryptedStr))) currentNotes = [{ name: 'Note', content: decryptedStr }]; }
                 catch (e) { currentNotes = [{ name: 'Note', content: decryptedStr }]; }
-
                 currentNotes = currentNotes.map(function (n) {
                     if (typeof n === 'string') return { name: 'Note', content: n };
                     var res = Object.assign({}, n);
