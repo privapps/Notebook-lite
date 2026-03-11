@@ -548,7 +548,13 @@
             function displayNote(index) {
                 var note = currentNotes[index];
                 if (!note) return;
-                document.getElementById('noteTitle').textContent = note.name || 'Untitled';
+                var noteTitleEl = document.getElementById('noteTitle');
+                if (note.name) {
+                    noteTitleEl.textContent = note.name;
+                    noteTitleEl.style.display = 'block';
+                } else {
+                    noteTitleEl.style.display = 'none';
+                }
 
                 var metaHtml = '';
                 if (note.date) metaHtml += '<span>' + note.date + '</span>';
@@ -607,19 +613,35 @@
                     if (obj && obj.content) { currentNotes = [{ name: 'Content', content: obj.content }]; currentMetadata = obj.meta || {}; return true; }
                     return false;
                 }
-                try { if (!parse(JSON.parse(decryptedStr))) currentNotes = [{ name: 'Note', content: decryptedStr }]; }
-                catch (e) { currentNotes = [{ name: 'Note', content: decryptedStr }]; }
+                try {
+                    var parsed = JSON.parse(decryptedStr);
+                    if (!parse(parsed)) {
+                        // Valid JSON but not our structured format, treat as single markdown
+                        currentNotes = [{ name: '', content: decryptedStr }];
+                        currentMetadata = {};
+                    }
+                } catch (e) {
+                    // Not a JSON string, treat as single markdown
+                    currentNotes = [{ name: '', content: decryptedStr }];
+                    currentMetadata = {};
+                }
                 currentNotes = currentNotes.map(function (n) {
-                    if (typeof n === 'string') return { name: 'Note', content: n };
+                    if (typeof n === 'string') return { name: '', content: n };
                     var res = Object.assign({}, n);
-                    res.name = n.name || n.title || 'Untitled';
+                    res.name = n.name || n.title || '';
                     res.content = n.content || n.text || '';
                     return res;
                 });
                 document.getElementById('setupView').style.display = 'none';
                 document.getElementById('passwordModal').style.display = 'none';
                 document.getElementById('mainView').style.display = 'block';
-                document.getElementById('notebookName').textContent = currentMetadata.name || 'Notebook';
+                var nameEl = document.getElementById('notebookName');
+                if (currentMetadata.name) {
+                    nameEl.textContent = currentMetadata.name;
+                    nameEl.style.display = 'block';
+                } else {
+                    nameEl.style.display = 'none';
+                }
                 var descEl = document.getElementById('notebookDescription');
                 if (descEl) {
                     descEl.textContent = currentMetadata.description || '';
