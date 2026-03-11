@@ -744,7 +744,7 @@
                 if (hashPart.includes('@')) {
                     var parts = hashPart.split('@');
                     var keyPart = parts[0];
-                    var urlPart = decodeURIComponent(parts[1]).split(/[?&]/)[0];
+                    var urlPart = decodeURIComponent(parts[1]);
                     if (!urlInput.value && urlPart) urlInput.value = urlPart;
                     if (!keyInput.value && keyPart) keyInput.value = keyPart;
                 } else if (hashPart.length > 20 && !hashPart.includes('=') && !hashPart.includes('&')) {
