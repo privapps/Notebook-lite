@@ -608,7 +608,7 @@
                     if (Array.isArray(obj)) { currentNotes = Array.isArray(obj[0]) ? obj[0] : [obj[0]]; currentMetadata = obj[1] || {}; return true; }
                     if (obj && obj.paste) {
                         try { return parse(JSON.parse(obj.paste)); }
-                        catch (e) { currentNotes = [{ name: 'Paste', content: obj.paste }]; currentMetadata = obj.meta || {}; return true; }
+                        catch (e) { currentNotes = [{ name: '', content: obj.paste }]; currentMetadata = obj.meta || {}; return true; }
                     }
                     if (obj && obj.content) { currentNotes = [{ name: 'Content', content: obj.content }]; currentMetadata = obj.meta || {}; return true; }
                     return false;

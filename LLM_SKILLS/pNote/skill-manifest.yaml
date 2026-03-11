@@ -1,0 +1,91 @@
+name: create-pbin-paste
+description: Create PrivateBin pastes from files or text with auto-format detection
+version: "1.0.0"
+author: pBin-MCP
+license: MIT
+
+inputs:
+  # Text-based paste
+  text:
+    type: string
+    description: Raw text content to create a paste from
+    required: false
+  
+  # File-based paste
+  file_path:
+    type: string
+    description: Path to file to create a paste from
+    required: false
+  
+  # Common parameters
+  expiry:
+    type: string
+    description: |
+      Paste expiry duration.
+      Valid values: 5min, 10min, 1hour, 1day (default), 1week, 1month, 1year, never
+    default: "1day"
+    required: false
+  
+  burn_after_read:
+    type: boolean
+    description: Delete paste after first read
+    default: false
+    required: false
+  
+  format:
+    type: string
+    description: |
+      Paste format (overrides auto-detection for files).
+      Valid values: plaintext, markdown, syntaxhighlighting
+    default: "plaintext"
+    required: false
+  
+  discussions:
+    type: boolean
+    description: Enable discussions and comments on the paste
+    default: false
+    required: false
+  
+  server:
+    type: string
+    description: PrivateBin server URL (default: https://paste.i2pd.xyz/)
+    required: false
+
+outputs:
+  url:
+    type: string
+    description: Paste URL with decryption key as fragment (https://server/?id#key)
+  
+  delete_token:
+    type: string
+    description: Token for deleting the paste
+  
+  success:
+    type: boolean
+    description: Whether the paste was created successfully
+  
+  error:
+    type: string
+    description: Error message if paste creation failed
+
+instructions: |
+  Create a paste on PrivateBin from text or file.
+  
+  ## Usage Examples
+  
+  ### From text
+  ```
+  text: "Hello, world!"
+  expiry: "1week"
+  ```
+  
+  ### From file with auto-detection
+  ```
+  file_path: "/path/to/script.py"
+  ```
+  
+  ### With custom format
+  ```
+  file_path: "/path/to/data.csv"
+  format: "plaintext"
+  ```

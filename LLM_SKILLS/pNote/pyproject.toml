@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pnote-skill"
+version = "1.1"
+description = "Share secrets or config files as PrivateBin pastes with transformed Notebook-lite URL"
+readme = "SKILL.md"
+license = { text = "MIT" }
+authors = [
+  { name = "ai-opencode" }
+]
+requires-python = ">=3.11"
+dependencies = [
+  "pbincli>=0.3.7",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=7.0",
+  "pytest-cov>=4.0",
+]
+
+[tool.uv]
+managed = true
+
+[tool.pytest.ini_options]
+testpaths = ["test_skill.py"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["skill.py", "cli.py"]
