@@ -2,7 +2,7 @@
 pBin Paste Skill - Public API
 """
 
-from skill import (
+from .skill import (
     create_paste_from_file,
     create_paste_from_text,
     PasteResult,

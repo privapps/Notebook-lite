@@ -9,7 +9,7 @@ import json
 import sys
 from argparse import ArgumentParser
 
-from skill import create_paste_from_file, create_paste_from_text, combine_files_to_json
+from .skill import create_paste_from_file, create_paste_from_text, combine_files_to_json
 
 
 def main() -> None:

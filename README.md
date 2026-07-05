@@ -4,7 +4,7 @@ A lightweight, read-only PrivateBin reader. Only decrypts and displays encrypted
 
 ## Features
 
-- **Small size**: ~121KB total (source), ~81KB (minified bundle)
+- **Small size**: ~144KB total (source), ~106KB (minified bundle)
 - **No dependencies**: Vanilla JavaScript
 - **Static hosting**: Works on any HTTP server (GitHub Pages, Netlify, etc.)
 - **Password support**: Integrated password prompt for protected pastes
@@ -12,6 +12,8 @@ A lightweight, read-only PrivateBin reader. Only decrypts and displays encrypted
 - **Syntax Highlighting**: Prism.js integration for code blocks (JS, Python, JSON)
 - **Inline Data**: Support for loading content directly from the URL hash
 - **Easy sharing**: Auto-updates URL for simple copy-pasting (hides password)
+- **Dark mode**: Toggle between light and dark themes (persisted to localStorage)
+- **GitHub link**: Quick access to the source repository from the content header
 
 ## Usage
 
@@ -38,6 +40,11 @@ index.html#abc@https://privatebin.net/p/epppa
 index.html#key@base64data
 ```
 
+**Sample URL:**
+```
+https://privapps.github.io/Notebook-lite/#Hj84nE4pQW4iBXhXhGf3wNeHqtYzGsupFFZHYgDDffjw@https://privapps.github.io/notebook/data/peppa
+```
+
 ## File Structure
 
 ```
@@ -51,6 +58,7 @@ notebook-lite/
 ├── prism-javascript.min.js  # JS syntax support
 ├── prism-python.min.js      # Python syntax support
 ├── prism-json.min.js        # JSON syntax support
+├── dompurify.min.js         # HTML sanitization
 ├── build.py                 # Build & Minification script
 └── README.md
 ```
@@ -60,18 +68,18 @@ notebook-lite/
 | Version | Size |
 |---------|------|
 | Original (Angular) | ~2MB+ |
-| notebook-lite (source) | ~121KB (all files) |
-| notebook-lite (bundle) | ~96KB (single minified file) |
+| notebook-lite (source) | ~144KB (all files) |
+| notebook-lite (bundle) | ~106KB (single minified file) |
 
 ## Build
 
 To bundle all dependencies into a single, portable, and minified HTML file:
 
 ```bash
-python3 build.py
+uv run python3 build.py
 ```
 
-This will create `build/index.html` (~81KB), which contains all CSS and JS inlined and minified.
+This will create `build/index.html` (~106KB), which contains all CSS and JS inlined and minified.
 
 ## Requirements
 

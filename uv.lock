@@ -57,9 +57,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "minify-html", specifier = ">=0.18.1" },
-    { name = "rcssmin", specifier = ">=1.2.2" },
-    { name = "rjsmin", specifier = ">=1.2.5" },
+    { name = "minify-html", specifier = "~=0.18.1" },
+    { name = "rcssmin", specifier = "~=1.2.2" },
+    { name = "rjsmin", specifier = "~=1.2.5" },
 ]
 
 [[package]]

@@ -8,22 +8,54 @@
     <link rel="stylesheet" href="prism-tomorrow.min.css">
     <style>
         :root {
-            --primary: #1e293b;
+            --primary: #0f172a;
             --accent: #6366f1;
             --accent-hover: #4f46e5;
+            --accent-light: rgba(99, 102, 241, 0.08);
+            --accent-lighter: rgba(99, 102, 241, 0.04);
             --bg: #f8fafc;
-            --sidebar-bg: rgba(255, 255, 255, 0.8);
-            --sidebar-hover: rgba(99, 102, 241, 0.08);
-            --border: rgba(226, 232, 240, 0.8);
+            --sidebar-bg: rgba(255, 255, 255, 0.85);
+            --sidebar-hover: rgba(99, 102, 241, 0.06);
+            --border: #e2e8f0;
+            --border-light: rgba(226, 232, 240, 0.6);
             --text: #0f172a;
             --text-muted: #64748b;
+            --text-light: #94a3b8;
             --card-bg: #ffffff;
+            --radius-xl: 20px;
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-md: 0 6px 16px -4px rgba(0,0,0,0.08), 0 2px 6px -2px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 28px -6px rgba(0,0,0,0.1), 0 4px 10px -4px rgba(0,0,0,0.06);
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        :root[data-theme="dark"] {
+            --primary: #f1f5f9;
+            --accent: #818cf8;
+            --accent-hover: #a5b4fc;
+            --accent-light: rgba(129, 140, 248, 0.18);
+            --accent-lighter: rgba(129, 140, 248, 0.1);
+            --bg: #0f172a;
+            --sidebar-bg: rgba(15, 23, 42, 0.95);
+            --sidebar-hover: rgba(129, 140, 248, 0.12);
+            --border: #475569;
+            --border-light: rgba(71, 85, 105, 0.7);
+            --text: #f1f5f9;
+            --text-muted: #cbd5e1;
+            --text-light: #94a3b8;
+            --card-bg: #1e293b;
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.45), 0 2px 4px -2px rgba(0,0,0,0.35);
+            --shadow-md: 0 6px 16px -4px rgba(0,0,0,0.5), 0 2px 6px -2px rgba(0,0,0,0.3);
+            --shadow-lg: 0 12px 28px -6px rgba(0,0,0,0.6), 0 4px 10px -4px rgba(0,0,0,0.4);
         }
 
         * {
@@ -33,11 +65,45 @@
         }
 
         body {
-            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Subtle grain texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.015;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 128px 128px;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-12px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
         .app-container {
@@ -45,177 +111,394 @@
             height: 100vh;
         }
 
-        /* Sidebar */
+        /* ─── Sidebar ─── */
         .sidebar {
-            width: 260px;
+            width: 280px;
+            min-width: 280px;
             background: var(--sidebar-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-right: 1px solid var(--border);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-right: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
             z-index: 10;
+            animation: slideInRight 0.4s ease-out;
+        }
+
+        .sidebar-section-label {
+            padding: 16px 24px 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-light);
         }
 
         .sidebar-item {
-            padding: 12px 20px;
-            margin: 4px 12px;
+            padding: 10px 16px;
+            margin: 2px 12px;
             cursor: pointer;
             border-radius: var(--radius-sm);
-            font-size: 0.9rem;
+            font-size: 0.875rem;
+            font-weight: 500;
             color: var(--text-muted);
-            background-color: rgba(226, 232, 240, 0.4);
-            transition: all 0.2s ease;
+            transition: all var(--transition-fast);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             border: 1px solid transparent;
+            position: relative;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%) scaleY(0);
+            width: 3px;
+            height: 60%;
+            border-radius: 0 2px 2px 0;
+            background: var(--accent);
+            transition: transform var(--transition-fast);
         }
 
         .sidebar-item:hover {
             background-color: var(--sidebar-hover);
-            color: var(--accent);
-            transform: translateX(4px);
+            color: var(--text);
+        }
+
+        .sidebar-item:hover::before {
+            transform: translateY(-50%) scaleY(0.5);
         }
 
         .sidebar-item.active {
-            background-color: var(--accent);
-            color: #fff;
+            background-color: var(--accent-light);
+            color: var(--accent);
             font-weight: 600;
-            box-shadow: var(--shadow);
+        }
+
+        .sidebar-item.active::before {
+            transform: translateY(-50%) scaleY(1);
         }
 
         .btn-view-all {
-            margin: 20px 12px;
-            padding: 12px;
-            background: rgba(226, 232, 240, 0.6);
-            border: 1px solid var(--border);
+            margin: 16px 12px 8px;
+            padding: 10px 14px;
+            background: var(--accent-lighter);
+            border: 1px solid var(--border-light);
             border-radius: var(--radius-md);
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--primary);
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .btn-view-all:hover {
-            border-color: var(--accent);
+            border-color: var(--border);
             color: var(--accent);
-            box-shadow: var(--shadow);
-            transform: translateY(-1px);
+            background: var(--accent-light);
         }
 
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+        .btn-view-all svg {
+            width: 14px;
+            height: 14px;
         }
 
         .github-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--text-muted);
+            color: var(--text-light);
             text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: color 0.2s;
-            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            padding: 8px 14px;
             border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid var(--border-light);
+            background: transparent;
         }
 
         .github-link:hover {
-            color: var(--accent);
-            border-color: var(--accent);
-            background: #fff;
+            color: var(--text);
+            border-color: var(--border);
+            background: rgba(226, 232, 240, 0.3);
         }
 
-        /* Content Area */
+        /* ─── Content Area ─── */
         .content-area {
             flex: 1;
-            padding: 20px 40px;
+            padding: 32px 60px;
             overflow-y: auto;
-            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.03), transparent);
+            background: linear-gradient(135deg, var(--accent-lighter) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(99,102,241,0.04) 0%, transparent 60%);
         }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .content-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .theme-toggle:hover {
+            color: var(--text);
+            border-color: var(--border);
+            background: rgba(226, 232, 240, 0.3);
+        }
+
+        :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+        :root:not([data-theme="dark"]) .theme-toggle .icon-sun { display: none; }
+        :root:not([data-theme="dark"]) .theme-toggle .icon-moon { display: block; }
 
         .note-card {
             background: var(--card-bg);
-            padding: 30px 40px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            max-width: 1100px;
+            padding: 44px 56px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            max-width: 1400px;
             margin: 0 auto;
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-light);
+            animation: fadeIn 0.5s ease-out 0.1s both;
+            position: relative;
+        }
+
+        .note-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 32px;
+            right: 32px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            border-radius: 0 0 2px 2px;
+            transition: opacity var(--transition-slow);
+        }
+
+        .note-card:hover::before {
+            opacity: 0.6;
         }
 
         .note-content {
-            font-size: 1.1rem;
-            color: #334155;
-            line-height: 1.5;
+            font-size: 1.05rem;
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .note-content h1 {
+            font-size: 1.875rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.3;
+        }
+
+        .note-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            line-height: 1.35;
+        }
+
+        .note-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
         }
 
         .note-content h1,
         .note-content h2,
         .note-content h3 {
-            margin-top: 1.25em;
-            margin-bottom: 0.5em;
+            margin-top: 1.5em;
+            margin-bottom: 0.6em;
             color: var(--primary);
-            font-weight: 800;
-            letter-spacing: -0.025em;
         }
 
         .note-content p {
-            margin-bottom: 1em;
+            margin-bottom: 1.1em;
         }
 
         .note-content ul,
         .note-content ol {
             margin-left: 1.5em;
-            margin-bottom: 1em;
+            margin-bottom: 1.1em;
         }
 
-        /* Setup / Welcome */
+        .note-content li {
+            margin-bottom: 0.35em;
+        }
+
+        .note-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding: 12px 20px;
+            margin: 1.5em 0;
+            background: var(--accent-lighter);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .note-content blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        .note-content a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(99,102,241,0.3);
+            transition: border-color var(--transition-fast);
+        }
+
+        .note-content a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        .note-content hr {
+            border: none;
+            height: 1px;
+            background: var(--border);
+            margin: 2em 0;
+        }
+
+        .note-content code:not(pre code) {
+            background: rgba(99,102,241,0.06);
+            color: var(--accent-hover);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .note-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            display: block;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .note-content th,
+        .note-content td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-light);
+            text-align: left;
+        }
+
+        .note-content th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .note-content tr:last-child td {
+            border-bottom: none;
+        }
+
+        .note-content tr:hover {
+            background: rgba(99,102,241,0.02);
+        }
+
+        .note-content img {
+            max-width: 100%;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ─── Setup / Welcome ─── */
         #setupView {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background: radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.05), transparent),
-                radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f8fafc 100%);
         }
 
         .setup-card {
             width: 100%;
-            max-width: 480px;
-            padding: 48px;
+            max-width: 440px;
+            padding: 44px;
             background: var(--card-bg);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border);
+            border: 1px solid var(--border-light);
+            animation: scaleIn 0.4s ease-out;
         }
 
         .setup-card h1 {
-            font-size: 2.25rem;
+            font-size: 1.875rem;
             font-weight: 800;
             color: var(--primary);
-            margin-bottom: 8px;
-            letter-spacing: -0.05em;
+            margin-bottom: 6px;
+            letter-spacing: -0.04em;
+        }
+
+        .setup-card .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .setup-card label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
         .input-field {
             width: 100%;
-            padding: 14px;
-            margin: 10px 0 24px 0;
+            padding: 12px 16px;
+            margin-bottom: 20px;
             border: 1.5px solid var(--border);
             border-radius: var(--radius-md);
-            font-size: 1rem;
-            transition: all 0.2s;
+            font-size: 0.95rem;
+            transition: all var(--transition);
             background: #f8fafc;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .input-field::placeholder {
+            color: var(--text-light);
         }
 
         .input-field:focus {
@@ -225,64 +508,87 @@
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
+        .input-field:hover:not(:focus) {
+            border-color: #cbd5e1;
+        }
+
         .btn {
-            padding: 14px 28px;
+            padding: 12px 28px;
             border: none;
             border-radius: var(--radius-md);
             cursor: pointer;
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
             width: 100%;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--transition);
+            font-family: inherit;
+            letter-spacing: -0.01em;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            background: linear-gradient(135deg, var(--accent), #7c3aed);
             color: #fff;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+            margin-top: 4px;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
         }
 
         .btn-primary:active {
             transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
         }
 
         label {
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
         }
 
         .note-title {
-            font-size: 2.5rem;
+            font-size: 2.25rem;
             font-weight: 800;
-            margin-bottom: 8px;
-            letter-spacing: -0.05em;
+            margin-bottom: 10px;
+            letter-spacing: -0.04em;
             color: var(--primary);
+            line-height: 1.2;
         }
 
         .note-meta {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 40px;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 32px;
             display: flex;
             align-items: center;
+            gap: 12px;
+        }
+
+        .note-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
         pre[class*="language-"] {
             border-radius: var(--radius-md);
-            margin: 32px 0;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            margin: 1.5em 0;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            font-size: 0.9rem;
         }
 
-        /* Overlay / Modal */
+        /* ─── Overlay / Modal ─── */
         .modal {
             display: none;
             position: fixed;
@@ -290,59 +596,120 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(248, 250, 252, 0.85);
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
             z-index: 1000;
             overflow-y: auto;
-            padding: 60px 40px;
+            padding: 48px 40px;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1100px;
-            margin: 0 auto 60px auto;
+            max-width: 1400px;
+            margin: 0 auto 48px auto;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        .modal-close {
-            font-size: 40px;
-            cursor: pointer;
-            color: var(--text-muted);
-            line-height: 1;
-            transition: color 0.2s;
-        }
-
-        .modal-close:hover {
+        .modal-header h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
             color: var(--primary);
         }
 
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all var(--transition-fast);
+            font-size: 24px;
+            border: 1px solid transparent;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+            background: rgba(226, 232, 240, 0.5);
+        }
+
         .view-all-item {
-            max-width: 1100px;
-            margin: 0 auto 80px auto;
-            padding-bottom: 60px;
-            border-bottom: 1.5px solid var(--border);
+            max-width: 1400px;
+            margin: 0 auto 48px auto;
+            padding: 32px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            animation: fadeIn 0.4s ease-out both;
         }
 
         .view-all-item h2 {
             color: var(--primary);
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
         }
 
         #error {
             background: #fef2f2;
             color: #b91c1c;
-            padding: 16px;
+            padding: 14px 16px;
             border-radius: var(--radius-md);
-            margin-top: 20px;
+            margin-top: 16px;
             border: 1px solid #fecaca;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             display: none;
+            animation: fadeIn 0.2s ease-out;
         }
 
+        .modal-error {
+            color: #b91c1c;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            text-align: center;
+            display: none;
+            padding: 10px;
+            background: #fef2f2;
+            border-radius: 8px;
+        }
+
+        :root[data-theme="dark"] .modal-error {
+            background: rgba(220, 38, 38, 0.15);
+            color: #fca5a5;
+        }
+
+        :root[data-theme="dark"] #error {
+            background: rgba(220, 38, 38, 0.15);
+            color: #fca5a5;
+            border-color: rgba(220, 38, 38, 0.3);
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ─── Responsive ─── */
         @media (max-width: 768px) {
             .app-container {
                 flex-direction: column;
@@ -350,23 +717,142 @@
 
             .sidebar {
                 width: 100%;
+                min-width: unset;
                 height: auto;
+                max-height: 50vh;
                 border-right: none;
-                border-bottom: 1px solid var(--border);
+                border-bottom: 1px solid var(--border-light);
             }
 
             .content-area {
-                padding: 20px;
+                padding: 20px 16px;
             }
 
             .note-card {
-                padding: 30px;
+                padding: 28px 24px;
+                border-radius: var(--radius-lg);
+            }
+
+            .note-title {
+                font-size: 1.75rem;
+            }
+
+            .setup-card {
+                padding: 32px 28px;
+            }
+
+            .setup-card h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-area {
+                padding: 16px 12px;
+            }
+
+            .note-card {
+                padding: 24px 20px;
+            }
+
+            .modal {
+                padding: 24px 16px;
             }
         }
 
         #passwordModal .setup-card {
             margin: 100px auto;
             position: relative;
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.12);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* Dark mode overrides */
+        :root[data-theme="dark"] body::before {
+            opacity: 0.03;
+        }
+
+        :root[data-theme="dark"] #setupView {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+        }
+
+        :root[data-theme="dark"] .modal {
+            background: rgba(15, 23, 42, 0.88);
+        }
+
+        :root[data-theme="dark"] .note-card::before {
+            opacity: 0.3;
+        }
+
+        :root[data-theme="dark"] ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.12);
+        }
+
+        :root[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        :root[data-theme="dark"] .note-content blockquote {
+            background: rgba(129, 140, 248, 0.08);
+        }
+
+        :root[data-theme="dark"] .note-content th {
+            background: #1e293b;
+        }
+
+        :root[data-theme="dark"] .note-content tr:hover {
+            background: rgba(129, 140, 248, 0.06);
+        }
+
+        :root[data-theme="dark"] .note-content table {
+            border-color: #475569;
+        }
+
+        :root[data-theme="dark"] .note-content code:not(pre code) {
+            background: rgba(129, 140, 248, 0.12);
+            color: #a5b4fc;
+        }
+
+        :root[data-theme="dark"] .github-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        :root[data-theme="dark"] .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        :root[data-theme="dark"] .btn-view-all {
+            background: rgba(129, 140, 248, 0.1);
+        }
+
+        :root[data-theme="dark"] .note-content a {
+            border-bottom-color: rgba(129, 140, 248, 0.4);
+        }
+
+        :root[data-theme="dark"] .input-field {
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+
+        :root[data-theme="dark"] .input-field:hover:not(:focus) {
+            border-color: #475569;
         }
     </style>
 </head>
@@ -375,14 +861,13 @@
     <div id="setupView">
         <div class="setup-card">
             <h1>Notebook Lite</h1>
-            <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Enter PrivateBin details to
-                access your notebook.</p>
+            <p class="subtitle">A lightweight PrivateBin reader. Paste a URL and decryption key to get started.</p>
             <label>URL</label>
             <input type="text" id="url" class="input-field" placeholder="https://privatebin.net/?...#key">
             <label>Symmetric Key</label>
-            <input type="text" id="key" class="input-field" placeholder="Extracted from URL if left blank">
+            <input type="text" id="key" class="input-field" placeholder="Extracted from URL hash if blank">
             <label>Password (optional)</label>
-            <input type="password" id="password" class="input-field" placeholder="Enter password if required">
+            <input type="password" id="password" class="input-field" placeholder="Enter if paste is protected">
             <button id="decryptBtn" class="btn btn-primary" onclick="window.app.decrypt()">Load Notebook</button>
             <div id="error"></div>
         </div>
@@ -391,24 +876,33 @@
     <div id="mainView" style="display:none">
         <div class="app-container">
             <aside class="sidebar">
-                <button class="btn btn-view-all" onclick="window.app.openViewAll()">View All</button>
+                <button class="btn-view-all" onclick="window.app.openViewAll()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    View All
+                </button>
+                <div class="sidebar-section-label">Notes</div>
                 <div id="sidebarNoteList"></div>
             </aside>
             <main class="content-area">
                 <div class="content-header">
-                    <h1 id="notebookName" style="color: var(--primary); font-weight: 700; margin: 0;"></h1>
-                    <a href="https://github.com/privapps/notebook-lite" target="_blank" class="github-link">
-                        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor"
-                            style="display: inline-block; vertical-align: middle;">
-                            <path
-                                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
-                            </path>
-                        </svg>
-                        View on GitHub
-                    </a>
+                    <h1 id="notebookName" style="color: var(--primary); font-weight: 700; margin: 0; letter-spacing: -0.03em;"></h1>
+                    <div class="content-header-right">
+                        <a href="https://github.com/privapps/notebook-lite" target="_blank" class="github-link">
+                            <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+                                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                            </svg>
+                            View on GitHub
+                        </a>
+                        <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">
+                            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <p id="notebookDescription"
-                    style="color: var(--text-muted); margin-top: -25px; margin-bottom: 30px; font-size: 1.1rem; display: none;">
+                    style="color: var(--text-muted); margin-top: -20px; margin-bottom: 28px; font-size: 0.95rem; display: none;">
                 </p>
                 <div class="note-card">
                     <h2 id="noteTitle" class="note-title"></h2>
@@ -429,17 +923,17 @@
 
     <div id="passwordModal" class="modal">
         <div class="setup-card">
-            <h2>Password Required</h2>
-            <p style="color:var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">This paste is password
-                protected.</p>
+            <h2 style="font-size: 1.5rem; letter-spacing: -0.03em;">Password Required</h2>
+            <p class="subtitle">This paste is password protected. Enter the password to decrypt.</p>
+            <label>Password</label>
             <input type="password" id="modalPassword" class="input-field" placeholder="Enter password">
             <button id="modalSubmitBtn" class="btn btn-primary">Decrypt</button>
-            <div id="modalError"
-                style="color: #d32f2f; font-size: 0.8rem; margin-top: 15px; text-align: center; display: none;"></div>
+            <div id="modalError" class="modal-error"></div>
         </div>
     </div>
 
     <script src="marked.min.js"></script>
+    <script src="dompurify.min.js"></script>
     <script src="prism.min.js"></script>
     <script src="prism-javascript.min.js"></script>
     <script src="prism-python.min.js"></script>
@@ -449,12 +943,45 @@
 
     <script>
         (function () {
+            // Theme initialization (runs before DOM ready to prevent flash)
+            (function initTheme() {
+                var stored = localStorage.getItem('theme');
+                if (stored === 'dark' || stored === 'light') {
+                    document.documentElement.dataset.theme = stored;
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.dataset.theme = 'dark';
+                }
+            })();
+
+            // Make all markdown links open in new tab
+            marked.use({
+                renderer: {
+                    link: function (token) {
+                        var out = '<a href="' + token.href + '"';
+                        if (token.title) out += ' title="' + token.title + '"';
+                        out += ' target="_blank" rel="noopener noreferrer">' + token.text + '</a>';
+                        return out;
+                    }
+                }
+            });
+
             var _decryptionRetryCount = 0;
             var _MAX_RETRIES = 3;
             var currentNotes = [];
             var currentMetadata = {};
 
             var base58 = new baseX('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz');
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                var div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function sanitizeHtml(html) {
+                return DOMPurify.sanitize(html);
+            }
 
             function bytesToLatin1(bytes) { return new TextDecoder('latin1').decode(bytes); }
             function latin1ToBytes(str) {
@@ -536,13 +1063,21 @@
 
             async function fetchPrivateBin(url) {
                 var fetchUrl = url.split('#')[0];
-                var response = await fetch(fetchUrl, {
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*'
+                var controller = new AbortController();
+                var timeoutId = setTimeout(function() { controller.abort(); }, 15000);
+                try {
+                    var response = await fetch(fetchUrl, {
+                        headers: { 'Accept': 'application/json, text/plain, */*' },
+                        signal: controller.signal
+                    });
+                    if (!response.ok) throw new Error('Fetch failed: ' + response.status);
+                    if (response.headers.get('content-length') && parseInt(response.headers.get('content-length')) > 10 * 1024 * 1024) {
+                        throw new Error('Response too large');
                     }
-                });
-                if (!response.ok) throw new Error('Fetch failed: ' + response.status);
-                return await response.json();
+                    return await response.json();
+                } finally {
+                    clearTimeout(timeoutId);
+                }
             }
 
             function displayNote(index) {
@@ -557,12 +1092,12 @@
                 }
 
                 var metaHtml = '';
-                if (note.date) metaHtml += '<span>' + note.date + '</span>';
-                if (note.tags) metaHtml += '<span style="margin-left:15px; opacity: 0.7;">' + (Array.isArray(note.tags) ? note.tags.join(', ') : note.tags) + '</span>';
+                if (note.date) metaHtml += '<span>&#128197; ' + escapeHtml(note.date) + '</span>';
+                if (note.tags) metaHtml += '<span>&#127991; ' + escapeHtml(Array.isArray(note.tags) ? note.tags.join(', ') : note.tags) + '</span>';
                 document.getElementById('noteMeta').innerHTML = metaHtml;
                 document.getElementById('noteMeta').style.display = metaHtml ? 'flex' : 'none';
 
-                document.getElementById('noteContent').innerHTML = marked.parse(note.content || '');
+                document.getElementById('noteContent').innerHTML = sanitizeHtml(marked.parse(note.content || ''));
                 Prism.highlightAll();
                 document.querySelectorAll('.sidebar-item').forEach(function (item, idx) {
                     if (idx === index) item.classList.add('active');
@@ -592,8 +1127,8 @@
                     viewAll.innerHTML = currentNotes.map(function (note) {
                         return `
                         <div class="view-all-item">
-                            <h2>${note.name || 'Untitled'}</h2>
-                            <div>${marked.parse(note.content || '')}</div>
+                            <h2>${escapeHtml(note.name || 'Untitled')}</h2>
+                            <div>${sanitizeHtml(marked.parse(note.content || ''))}</div>
                         </div>
                     `;
                     }).join('');
@@ -603,7 +1138,6 @@
 
             async function attemptDecryption(data, key, password) {
                 var decryptedStr = await decipher(keyFromBase58(key), password, [data.ct, data.adata]);
-                // console.log("wtf", decryptedStr);
                 function parse(obj) {
                     if (Array.isArray(obj)) { currentNotes = Array.isArray(obj[0]) ? obj[0] : [obj[0]]; currentMetadata = obj[1] || {}; return true; }
                     if (obj && obj.paste) {
@@ -657,7 +1191,7 @@
             async function getNotebookData(url) {
                 if (url.startsWith('http')) return await fetchPrivateBin(url);
                 try {
-                    var normalized = url.replace(/\./g, '/').replace(/-/g, '+').replace(/_/g, '/');
+                    var normalized = url.replace(/-/g, '+').replace(/_/g, '/').replace(/\./g, '/');
                     while (normalized.length % 4 !== 0) normalized += '=';
                     return JSON.parse(bytesToUtf8(latin1ToBytes(atob(normalized))));
                 } catch (e) {
@@ -676,7 +1210,7 @@
                 pwdInput.focus();
                 submitBtn.onclick = async function () {
                     var password = pwdInput.value;
-                    submitBtn.disabled = true; submitBtn.textContent = 'Decrypting...';
+                    submitBtn.disabled = true; submitBtn.innerHTML = '<span class="loading"></span>Decrypting...';
                     errEl.style.display = 'none';
                     try {
                         var data = await getNotebookData(url);
@@ -695,6 +1229,7 @@
                         }
                     } finally {
                         submitBtn.disabled = false; submitBtn.textContent = 'Decrypt';
+
                     }
                 };
                 pwdInput.onkeypress = function (e) { if (e.key === 'Enter') submitBtn.click(); };
@@ -712,7 +1247,7 @@
                     var key = keyInput.value.trim();
                     if (!url) { errEl.textContent = 'Enter URL or Content'; errEl.style.display = 'block'; return; }
                     var btn = document.getElementById('decryptBtn');
-                    btn.disabled = true; btn.textContent = 'Decrypting...';
+                    btn.disabled = true; btn.innerHTML = '<span class="loading"></span>Decrypting...';
                     try {
                         var data = await getNotebookData(url);
                         if (!key && url.startsWith('http')) { try { key = new URL(url).hash.substring(1); } catch (e) { } }
@@ -774,6 +1309,16 @@
                 }
 
                 if (urlInput.value && keyInput.value) { setTimeout(window.app.decrypt, 100); }
+
+                // Theme toggle
+                var themeBtn = document.getElementById('themeToggle');
+                if (themeBtn) {
+                    themeBtn.addEventListener('click', function () {
+                        var isDark = document.documentElement.dataset.theme === 'dark';
+                        document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
+                        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+                    });
+                }
 
                 window.addEventListener('keydown', function (e) {
                     if (e.key === 'Escape') {

@@ -5,7 +5,7 @@ description = "lite version of private notebook based on privatebin"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "minify-html>=0.18.1",
-    "rcssmin>=1.2.2",
-    "rjsmin>=1.2.5",
+    "minify-html~=0.18.1",
+    "rcssmin~=1.2.2",
+    "rjsmin~=1.2.5",
 ]

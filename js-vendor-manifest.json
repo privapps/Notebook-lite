@@ -1,0 +1,52 @@
+{
+  "libraries": [
+    {
+      "name": "marked",
+      "file": "marked.min.js",
+      "version": "unknown",
+      "source": "https://github.com/markedjs/marked"
+    },
+    {
+      "name": "DOMPurify",
+      "file": "dompurify.min.js",
+      "version": "3.2.4",
+      "source": "https://github.com/cure53/DOMPurify"
+    },
+    {
+      "name": "Prism.js",
+      "file": "prism.min.js",
+      "version": "unknown",
+      "source": "https://github.com/PrismJS/prism"
+    },
+    {
+      "name": "Prism.js - JavaScript",
+      "file": "prism-javascript.min.js",
+      "version": "unknown",
+      "source": "https://github.com/PrismJS/prism"
+    },
+    {
+      "name": "Prism.js - Python",
+      "file": "prism-python.min.js",
+      "version": "unknown",
+      "source": "https://github.com/PrismJS/prism"
+    },
+    {
+      "name": "Prism.js - JSON",
+      "file": "prism-json.min.js",
+      "version": "unknown",
+      "source": "https://github.com/PrismJS/prism"
+    },
+    {
+      "name": "base-x",
+      "file": "base-x-3.0.7.js",
+      "version": "3.0.7",
+      "source": "https://github.com/bitcoinjs/base-x"
+    },
+    {
+      "name": "rawinflate",
+      "file": "rawinflate-0.3.js",
+      "version": "0.3",
+      "source": "https://github.com/nicktomlin/rawinflate.js"
+    }
+  ]
+}
