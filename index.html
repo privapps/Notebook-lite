@@ -68,7 +68,7 @@
             font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            line-height: 1.6;
+            line-height: 1.65;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -124,6 +124,10 @@
             overflow-y: auto;
             z-index: 10;
             animation: slideInRight 0.4s ease-out;
+        }
+
+        .sidebar-backdrop {
+            display: none;
         }
 
         .sidebar-section-label {
@@ -255,6 +259,37 @@
             gap: 8px;
         }
 
+        .notes-menu-toggle {
+            display: none;
+            align-items: center;
+            gap: 7px;
+            min-height: 36px;
+            padding: 0 11px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .notes-menu-toggle[hidden] {
+            display: none;
+        }
+
+        .notes-menu-toggle:hover {
+            color: var(--text);
+            border-color: var(--border);
+            background: var(--accent-lighter);
+        }
+
+        .notes-menu-toggle svg {
+            width: 16px;
+            height: 16px;
+        }
+
         .theme-toggle {
             width: 36px;
             height: 36px;
@@ -310,29 +345,30 @@
         }
 
         .note-content {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--text);
-            line-height: 1.7;
+            line-height: 1.75;
         }
 
         .note-content h1 {
-            font-size: 1.875rem;
+            font-size: 1.625rem;
             font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.25;
+        }
+
+        .note-content h2 {
+            font-size: 1.375rem;
+            font-weight: 700;
             letter-spacing: -0.03em;
             line-height: 1.3;
         }
 
-        .note-content h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .note-content h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
             letter-spacing: -0.025em;
             line-height: 1.35;
-        }
-
-        .note-content h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
         }
 
         .note-content h1,
@@ -398,6 +434,109 @@
             font-weight: 500;
         }
 
+        .note-content pre.code-block,
+        .view-all-item pre.code-block {
+            margin: 1.5em 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+            background: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .note-content pre.code-block > .code-block-toolbar,
+        .view-all-item pre.code-block > .code-block-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px 8px;
+            border-bottom: 1px solid var(--border-light);
+            background: linear-gradient(180deg, var(--accent-lighter) 0%, transparent 100%);
+        }
+
+        .note-content pre.code-block--plain > .code-block-toolbar,
+        .view-all-item pre.code-block--plain > .code-block-toolbar {
+            background: linear-gradient(180deg, rgba(99,102,241,0.10) 0%, transparent 100%);
+        }
+
+        .note-content pre.code-block .code-block-label,
+        .view-all-item pre.code-block .code-block-label {
+            display: inline-flex;
+            align-items: center;
+            min-height: 1.8rem;
+            padding: 0 8px;
+            border-radius: 999px;
+            color: var(--accent-hover);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .note-content pre.code-block .code-block-copy,
+        .view-all-item pre.code-block .code-block-copy {
+            flex: 0 0 auto;
+            width: 1.8rem;
+            height: 1.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-light);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.92);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .note-content pre.code-block .code-block-copy:hover,
+        .view-all-item pre.code-block .code-block-copy:hover {
+            color: var(--primary);
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .note-content pre.code-block .code-block-copy:focus-visible,
+        .view-all-item pre.code-block .code-block-copy:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .note-content pre.code-block .code-block-copy.is-copied,
+        .view-all-item pre.code-block .code-block-copy.is-copied {
+            color: #059669;
+            border-color: rgba(5,150,105,0.35);
+            background: rgba(5,150,105,0.12);
+        }
+
+        .note-content pre.code-block .code-block-copy svg,
+        .view-all-item pre.code-block .code-block-copy svg {
+            width: 12px;
+            height: 12px;
+            pointer-events: none;
+        }
+
+        .note-content pre.code-block > .code-block-scroll,
+        .view-all-item pre.code-block > .code-block-scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 12px;
+        }
+
+        .note-content pre.code-block > .code-block-scroll > code,
+        .view-all-item pre.code-block > .code-block-scroll > code {
+            display: block;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            color: inherit;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre;
+            tab-size: 4;
+        }
+
         .note-content table {
             width: 100%;
             border-collapse: collapse;
@@ -460,11 +599,21 @@
         }
 
         .setup-card h1 {
-            font-size: 1.875rem;
+            font-size: 2rem;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 6px;
             letter-spacing: -0.04em;
+            line-height: 1.15;
+        }
+
+        .password-modal-title {
+            font-size: 1.625rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.04em;
+            line-height: 1.2;
         }
 
         .setup-card .subtitle {
@@ -476,7 +625,7 @@
 
         .setup-card label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-muted);
             margin-bottom: 6px;
@@ -549,7 +698,7 @@
         }
 
         label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -557,17 +706,31 @@
         }
 
         .note-title {
-            font-size: 2.25rem;
+            font-size: 1.625rem;
             font-weight: 800;
             margin-bottom: 10px;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.045em;
             color: var(--primary);
             line-height: 1.2;
         }
 
+        #notebookName {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 1.15;
+        }
+
+        #notebookDescription {
+            color: var(--text-muted);
+            font-size: 0.9375rem;
+            line-height: 1.55;
+        }
+
         .note-meta {
             color: var(--text-light);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             margin-bottom: 32px;
             display: flex;
             align-items: center;
@@ -614,9 +777,10 @@
         }
 
         .modal-header h1 {
-            font-size: 1.75rem;
+            font-size: 1.625rem;
             font-weight: 800;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.035em;
+            line-height: 1.2;
             color: var(--primary);
         }
 
@@ -652,10 +816,11 @@
 
         .view-all-item h2 {
             color: var(--primary);
-            font-size: 1.375rem;
+            font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.035em;
+            line-height: 1.25;
         }
 
         #error {
@@ -711,21 +876,50 @@
 
         /* ─── Responsive ─── */
         @media (max-width: 768px) {
-            .app-container {
-                flex-direction: column;
+            .sidebar {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                width: min(320px, 88vw);
+                min-width: 0;
+                border-right: 1px solid var(--border-light);
+                border-bottom: none;
+                box-shadow: var(--shadow-lg);
+                overflow-y: auto;
+                transform: translateX(-105%);
+                transition: transform var(--transition-slow), visibility var(--transition-slow);
+                visibility: hidden;
+                z-index: 30;
             }
 
-            .sidebar {
-                width: 100%;
-                min-width: unset;
-                height: auto;
-                max-height: 50vh;
-                border-right: none;
-                border-bottom: 1px solid var(--border-light);
+            .sidebar.is-open {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .sidebar-backdrop {
+                position: fixed;
+                inset: 0;
+                display: block;
+                background: rgba(15, 23, 42, 0.42);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity var(--transition-slow);
+                z-index: 20;
+            }
+
+            .sidebar-backdrop.is-visible {
+                opacity: 1;
+                pointer-events: auto;
             }
 
             .content-area {
                 padding: 20px 16px;
+            }
+
+            .notes-menu-toggle {
+                display: inline-flex;
             }
 
             .note-card {
@@ -734,6 +928,10 @@
             }
 
             .note-title {
+                font-size: 1.5rem;
+            }
+
+            #notebookName {
                 font-size: 1.75rem;
             }
 
@@ -742,11 +940,33 @@
             }
 
             .setup-card h1 {
-                font-size: 1.5rem;
+                font-size: 1.75rem;
+            }
+
+            .password-modal-title {
+                font-size: 1.375rem;
+            }
+
+            .modal-header h1 {
+                font-size: 1.375rem;
             }
         }
 
         @media (max-width: 480px) {
+            .content-header {
+                align-items: flex-start;
+            }
+
+            .content-header-right {
+                flex: 0 0 auto;
+            }
+
+            .github-link {
+                gap: 0;
+                padding: 8px;
+                font-size: 0;
+            }
+
             .content-area {
                 padding: 16px 12px;
             }
@@ -830,6 +1050,44 @@
             color: #a5b4fc;
         }
 
+        :root[data-theme="dark"] .note-content pre.code-block,
+        :root[data-theme="dark"] .view-all-item pre.code-block {
+            background: #0f172a;
+            border-color: #334155;
+        }
+
+        :root[data-theme="dark"] .note-content pre.code-block > .code-block-toolbar,
+        :root[data-theme="dark"] .view-all-item pre.code-block > .code-block-toolbar {
+            background: linear-gradient(180deg, rgba(129,140,248,0.16) 0%, transparent 100%);
+            border-bottom-color: #334155;
+        }
+
+        :root[data-theme="dark"] .note-content pre.code-block .code-block-copy,
+        :root[data-theme="dark"] .view-all-item pre.code-block .code-block-copy {
+            background: rgba(15,23,42,0.92);
+            color: #cbd5e1;
+            border-color: #475569;
+        }
+
+        :root[data-theme="dark"] .note-content pre.code-block .code-block-copy:hover,
+        :root[data-theme="dark"] .view-all-item pre.code-block .code-block-copy:hover {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-color: #818cf8;
+        }
+
+        :root[data-theme="dark"] .note-content pre.code-block .code-block-copy.is-copied,
+        :root[data-theme="dark"] .view-all-item pre.code-block .code-block-copy.is-copied {
+            color: #34d399;
+            border-color: rgba(52,211,153,0.4);
+            background: rgba(16,185,129,0.18);
+        }
+
+        :root[data-theme="dark"] .note-content pre.code-block .code-block-label,
+        :root[data-theme="dark"] .view-all-item pre.code-block .code-block-label {
+            color: #c7d2fe;
+        }
+
         :root[data-theme="dark"] .github-link:hover {
             background: rgba(255, 255, 255, 0.06);
         }
@@ -875,7 +1133,7 @@
 
     <div id="mainView" style="display:none">
         <div class="app-container">
-            <aside class="sidebar">
+            <aside id="notesSidebar" class="sidebar" aria-label="Notebook notes">
                 <button class="btn-view-all" onclick="window.app.openViewAll()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
@@ -885,11 +1143,16 @@
                 <div class="sidebar-section-label">Notes</div>
                 <div id="sidebarNoteList"></div>
             </aside>
+            <div id="sidebarBackdrop" class="sidebar-backdrop" aria-hidden="true"></div>
             <main class="content-area">
                 <div class="content-header">
-                    <h1 id="notebookName" style="color: var(--primary); font-weight: 700; margin: 0; letter-spacing: -0.03em;"></h1>
+                    <h1 id="notebookName" style="margin: 0;"></h1>
                     <div class="content-header-right">
-                        <a href="https://github.com/privapps/notebook-lite" target="_blank" class="github-link">
+                        <button id="notesMenuToggle" class="notes-menu-toggle" type="button" aria-controls="notesSidebar" aria-expanded="false">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+                            Notes
+                        </button>
+                        <a href="https://github.com/privapps/notebook-lite" target="_blank" class="github-link" aria-label="View on GitHub">
                             <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
                                 <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
                             </svg>
@@ -902,7 +1165,7 @@
                     </div>
                 </div>
                 <p id="notebookDescription"
-                    style="color: var(--text-muted); margin-top: -20px; margin-bottom: 28px; font-size: 0.95rem; display: none;">
+                    style="margin-top: -20px; margin-bottom: 28px; display: none;">
                 </p>
                 <div class="note-card">
                     <h2 id="noteTitle" class="note-title"></h2>
@@ -923,7 +1186,7 @@
 
     <div id="passwordModal" class="modal">
         <div class="setup-card">
-            <h2 style="font-size: 1.5rem; letter-spacing: -0.03em;">Password Required</h2>
+            <h2 class="password-modal-title">Password Required</h2>
             <p class="subtitle">This paste is password protected. Enter the password to decrypt.</p>
             <label>Password</label>
             <input type="password" id="modalPassword" class="input-field" placeholder="Enter password">
@@ -1080,6 +1343,108 @@
                 }
             }
 
+            function copyTextToClipboard(text) {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    return navigator.clipboard.writeText(text);
+                }
+                return new Promise(function (resolve, reject) {
+                    var textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    textarea.setAttribute('readonly', '');
+                    textarea.style.position = 'fixed';
+                    textarea.style.top = '-9999px';
+                    textarea.style.left = '-9999px';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    textarea.setSelectionRange(0, textarea.value.length);
+                    try {
+                        var ok = document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        if (ok) resolve();
+                        else reject(new Error('Copy failed'));
+                    } catch (err) {
+                        document.body.removeChild(textarea);
+                        reject(err);
+                    }
+                });
+            }
+
+            function setCopyButtonState(button, state) {
+                if (!button) return;
+                var copied = state === 'copied';
+                button.innerHTML = copied
+                    ? '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 4L6.5 11.5 3 8"/></svg>'
+                    : '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="8" height="8" rx="1.5"/><path d="M3 11.5V4.5A1.5 1.5 0 014.5 3h7"/></svg>';
+                button.classList.toggle('is-copied', copied);
+                button.title = copied ? 'Copied' : 'Copy code';
+                button.setAttribute('aria-label', button.title);
+            }
+
+            function resetCopyButton(button, delay) {
+                if (!button) return;
+                window.clearTimeout(button._copyResetTimer);
+                button._copyResetTimer = window.setTimeout(function () {
+                    setCopyButtonState(button, 'copy');
+                }, delay || 1200);
+            }
+
+            function copyCodeBlock(button) {
+                var pre = button.closest('pre');
+                var code = pre ? pre.querySelector('.code-block-scroll > code') || pre.querySelector('code') : null;
+                var text = code ? code.textContent : '';
+                if (!text) return;
+
+                return copyTextToClipboard(text).then(function () {
+                    setCopyButtonState(button, 'copied');
+                    resetCopyButton(button, 1400);
+                }).catch(function (err) {
+                    console.error('Copy failed', err);
+                });
+            }
+
+            function enhanceCodeBlocks(container) {
+                if (!container) return;
+                container.querySelectorAll('pre > code').forEach(function (code) {
+                    var pre = code.parentElement;
+                    if (!pre) return;
+                    if (!pre.classList.contains('code-block')) pre.classList.add('code-block');
+                    var languageClass = Array.from(code.classList).find(function (cls) {
+                        return cls.indexOf('language-') === 0;
+                    });
+                    if (languageClass) {
+                        pre.classList.add(languageClass);
+                    } else {
+                        pre.classList.add('code-block--plain');
+                    }
+                    if (pre.querySelector('.code-block-toolbar')) return;
+
+                    var toolbar = document.createElement('div');
+                    toolbar.className = 'code-block-toolbar';
+
+                    var label = document.createElement('span');
+                    label.className = 'code-block-label';
+                    label.textContent = 'Code';
+
+                    var button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'code-block-copy';
+                    button.setAttribute('aria-label', 'Copy code block');
+                    button.addEventListener('click', function () {
+                        copyCodeBlock(button);
+                    });
+                    setCopyButtonState(button, 'copy');
+
+                    var scroll = document.createElement('div');
+                    scroll.className = 'code-block-scroll';
+
+                    toolbar.appendChild(label);
+                    toolbar.appendChild(button);
+                    pre.insertBefore(toolbar, code);
+                    scroll.appendChild(code);
+                    pre.appendChild(scroll);
+                });
+            }
+
             function displayNote(index) {
                 var note = currentNotes[index];
                 if (!note) return;
@@ -1097,18 +1462,43 @@
                 document.getElementById('noteMeta').innerHTML = metaHtml;
                 document.getElementById('noteMeta').style.display = metaHtml ? 'flex' : 'none';
 
-                document.getElementById('noteContent').innerHTML = sanitizeHtml(marked.parse(note.content || ''));
-                Prism.highlightAll();
+                var noteContent = document.getElementById('noteContent');
+                noteContent.innerHTML = sanitizeHtml(marked.parse(note.content || ''));
+                enhanceCodeBlocks(noteContent);
+                Prism.highlightAllUnder(noteContent);
                 document.querySelectorAll('.sidebar-item').forEach(function (item, idx) {
                     if (idx === index) item.classList.add('active');
                     else item.classList.remove('active');
                 });
+                closeNotesMenu();
                 window.scrollTo({ top: 0 });
+            }
+
+            function closeNotesMenu() {
+                var sidebar = document.getElementById('notesSidebar');
+                var backdrop = document.getElementById('sidebarBackdrop');
+                var toggle = document.getElementById('notesMenuToggle');
+                if (sidebar) sidebar.classList.remove('is-open');
+                if (backdrop) backdrop.classList.remove('is-visible');
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            function toggleNotesMenu() {
+                var sidebar = document.getElementById('notesSidebar');
+                var backdrop = document.getElementById('sidebarBackdrop');
+                var toggle = document.getElementById('notesMenuToggle');
+                if (!sidebar || sidebar.style.display === 'none') return;
+                var isOpen = sidebar.classList.toggle('is-open');
+                if (backdrop) backdrop.classList.toggle('is-visible', isOpen);
+                if (toggle) toggle.setAttribute('aria-expanded', String(isOpen));
             }
 
             function updateUI() {
                 var sidebarEl = document.querySelector('.sidebar');
                 if (sidebarEl) sidebarEl.style.display = currentNotes.length > 1 ? 'flex' : 'none';
+                var notesMenuToggle = document.getElementById('notesMenuToggle');
+                if (notesMenuToggle) notesMenuToggle.hidden = currentNotes.length <= 1;
+                if (currentNotes.length <= 1) closeNotesMenu();
 
                 var sidebarList = document.getElementById('sidebarNoteList');
                 if (sidebarList) {
@@ -1132,6 +1522,7 @@
                         </div>
                     `;
                     }).join('');
+                    enhanceCodeBlocks(viewAll);
                     Prism.highlightAllUnder(viewAll);
                 }
             }
@@ -1266,7 +1657,9 @@
                     }
                 },
                 openViewAll: function () { document.getElementById('viewAllModal').style.display = 'block'; },
-                closeViewAll: function () { document.getElementById('viewAllModal').style.display = 'none'; }
+                closeViewAll: function () { document.getElementById('viewAllModal').style.display = 'none'; },
+                toggleNotesMenu: toggleNotesMenu,
+                closeNotesMenu: closeNotesMenu
             };
 
             function initApp() {
@@ -1320,9 +1713,15 @@
                     });
                 }
 
+                var notesMenuToggle = document.getElementById('notesMenuToggle');
+                if (notesMenuToggle) notesMenuToggle.addEventListener('click', toggleNotesMenu);
+                var sidebarBackdrop = document.getElementById('sidebarBackdrop');
+                if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', closeNotesMenu);
+
                 window.addEventListener('keydown', function (e) {
                     if (e.key === 'Escape') {
                         window.app.closeViewAll();
+                        closeNotesMenu();
                         var pm = document.getElementById('passwordModal');
                         if (pm) pm.style.display = 'none';
                     }

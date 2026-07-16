@@ -9,7 +9,8 @@ A lightweight, read-only PrivateBin reader. Only decrypts and displays encrypted
 - **Static hosting**: Works on any HTTP server (GitHub Pages, Netlify, etc.)
 - **Password support**: Integrated password prompt for protected pastes
 - **Markdown rendering**: Renders decrypted content as markdown
-- **Syntax Highlighting**: Prism.js integration for code blocks (JS, Python, JSON)
+- **Code blocks**: Plain fences get a distinct monospace panel, and every fenced block has a tiny copy button
+- **Syntax Highlighting**: Prism.js integration for language-tagged code blocks (JS, Python, JSON)
 - **Inline Data**: Support for loading content directly from the URL hash
 - **Easy sharing**: Auto-updates URL for simple copy-pasting (hides password)
 - **Dark mode**: Toggle between light and dark themes (persisted to localStorage)
