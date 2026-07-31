@@ -13,6 +13,11 @@
             --accent-hover: #4f46e5;
             --accent-light: rgba(99, 102, 241, 0.08);
             --accent-lighter: rgba(99, 102, 241, 0.04);
+            --code-bg: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+            --code-border: rgba(148, 163, 184, 0.9);
+            --code-toolbar-bg: linear-gradient(180deg, rgba(15, 23, 42, 0.06) 0%, rgba(15, 23, 42, 0.02) 100%);
+            --code-copy-bg: rgba(255,255,255,0.98);
+            --code-copy-hover-bg: #ffffff;
             --bg: #f8fafc;
             --sidebar-bg: rgba(255, 255, 255, 0.85);
             --sidebar-hover: rgba(99, 102, 241, 0.06);
@@ -42,6 +47,11 @@
             --accent-hover: #a5b4fc;
             --accent-light: rgba(129, 140, 248, 0.18);
             --accent-lighter: rgba(129, 140, 248, 0.1);
+            --code-bg: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+            --code-border: #334155;
+            --code-toolbar-bg: linear-gradient(180deg, rgba(129,140,248,0.16) 0%, rgba(129,140,248,0.04) 100%);
+            --code-copy-bg: rgba(15,23,42,0.92);
+            --code-copy-hover-bg: #1e293b;
             --bg: #0f172a;
             --sidebar-bg: rgba(15, 23, 42, 0.95);
             --sidebar-hover: rgba(129, 140, 248, 0.12);
@@ -411,7 +421,7 @@
             color: var(--accent);
             text-decoration: none;
             border-bottom: 1px solid rgba(99,102,241,0.3);
-            transition: border-color var(--transition-fast);
+            transition: color var(--transition-fast), border-color var(--transition-fast);
         }
 
         .note-content a:hover {
@@ -438,8 +448,8 @@
         .view-all-item pre.code-block {
             margin: 1.5em 0;
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-light);
-            background: var(--card-bg);
+            border: 1px solid var(--code-border);
+            background: var(--code-bg);
             box-shadow: var(--shadow-sm);
             overflow: hidden;
         }
@@ -451,8 +461,8 @@
             justify-content: space-between;
             gap: 12px;
             padding: 10px 12px 8px;
-            border-bottom: 1px solid var(--border-light);
-            background: linear-gradient(180deg, var(--accent-lighter) 0%, transparent 100%);
+            border-bottom: 1px solid var(--code-border);
+            background: var(--code-toolbar-bg);
         }
 
         .note-content pre.code-block--plain > .code-block-toolbar,
@@ -482,9 +492,9 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--code-border);
             border-radius: 999px;
-            background: rgba(255,255,255,0.92);
+            background: var(--code-copy-bg);
             color: var(--text-muted);
             cursor: pointer;
             transition: all var(--transition-fast);
@@ -494,7 +504,7 @@
         .view-all-item pre.code-block .code-block-copy:hover {
             color: var(--primary);
             border-color: var(--accent);
-            background: #fff;
+            background: var(--code-copy-hover-bg);
         }
 
         .note-content pre.code-block .code-block-copy:focus-visible,
@@ -525,12 +535,14 @@
         }
 
         .note-content pre.code-block > .code-block-scroll > code,
-        .view-all-item pre.code-block > .code-block-scroll > code {
+        .view-all-item pre.code-block > .code-block-scroll > code,
+        pre[class*="language-"] > code {
             display: block;
             margin: 0;
             padding: 0;
-            background: transparent;
-            color: inherit;
+            background: transparent !important;
+            color: var(--text);
+            text-shadow: none;
             font-size: 0.9rem;
             line-height: 1.6;
             white-space: pre;
@@ -747,7 +759,9 @@
             border-radius: var(--radius-md);
             margin: 1.5em 0;
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--code-border);
+            background: var(--code-bg);
+            color: var(--text);
             font-size: 0.9rem;
         }
 
@@ -1050,28 +1064,38 @@
             color: #a5b4fc;
         }
 
+        :root[data-theme="dark"] .note-content a {
+            color: #c7d2fe;
+            border-bottom-color: rgba(199, 210, 254, 0.48);
+        }
+
+        :root[data-theme="dark"] .note-content a:hover {
+            color: #e0e7ff;
+            border-bottom-color: #e0e7ff;
+        }
+
         :root[data-theme="dark"] .note-content pre.code-block,
         :root[data-theme="dark"] .view-all-item pre.code-block {
-            background: #0f172a;
-            border-color: #334155;
+            background: var(--code-bg);
+            border-color: var(--code-border);
         }
 
         :root[data-theme="dark"] .note-content pre.code-block > .code-block-toolbar,
         :root[data-theme="dark"] .view-all-item pre.code-block > .code-block-toolbar {
-            background: linear-gradient(180deg, rgba(129,140,248,0.16) 0%, transparent 100%);
-            border-bottom-color: #334155;
+            background: var(--code-toolbar-bg);
+            border-bottom-color: var(--code-border);
         }
 
         :root[data-theme="dark"] .note-content pre.code-block .code-block-copy,
         :root[data-theme="dark"] .view-all-item pre.code-block .code-block-copy {
-            background: rgba(15,23,42,0.92);
+            background: var(--code-copy-bg);
             color: #cbd5e1;
-            border-color: #475569;
+            border-color: var(--code-border);
         }
 
         :root[data-theme="dark"] .note-content pre.code-block .code-block-copy:hover,
         :root[data-theme="dark"] .view-all-item pre.code-block .code-block-copy:hover {
-            background: #1e293b;
+            background: var(--code-copy-hover-bg);
             color: #e2e8f0;
             border-color: #818cf8;
         }
@@ -1098,10 +1122,6 @@
 
         :root[data-theme="dark"] .btn-view-all {
             background: rgba(129, 140, 248, 0.1);
-        }
-
-        :root[data-theme="dark"] .note-content a {
-            border-bottom-color: rgba(129, 140, 248, 0.4);
         }
 
         :root[data-theme="dark"] .input-field {
