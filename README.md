@@ -8,6 +8,7 @@ A lightweight, read-only PrivateBin reader. Only decrypts and displays encrypted
 - **No dependencies**: Vanilla JavaScript
 - **Static hosting**: Works on any HTTP server (GitHub Pages, Netlify, etc.)
 - **Password support**: Integrated password prompt for protected pastes
+- **Relative PrivateBin paths**: Load same-origin pastes with root-relative `/path` or parent-relative `../path` URLs
 - **Markdown rendering**: Renders decrypted content as markdown
 - **Code blocks**: Plain fences get a distinct monospace panel, and every fenced block has a tiny copy button
 - **Syntax Highlighting**: Prism.js integration for language-tagged code blocks (JS, Python, JSON)
@@ -24,6 +25,15 @@ A lightweight, read-only PrivateBin reader. Only decrypts and displays encrypted
 3. Enter password if required
 4. Click "Decrypt"
 
+### Relative PrivateBin Paths
+
+When Notebook Lite is served over HTTP(S), you can enter a path instead of the paste's full URL:
+
+- `/notebook/data/peppa#key` resolves from the origin serving Notebook Lite.
+- `../notebook/data/peppa#key` resolves from the Notebook Lite page URL, with parent path segments normalized.
+
+The URL fragment supplies the decryption key when the key field is blank; an explicitly entered key takes precedence. After a successful load, the share link contains the resolved absolute paste URL. Relative paths do not work when opening the app as a local `file:` URL. Only single-leading-slash and `../` paths are supported; protocol-relative URLs such as `//example.com/paste` are rejected.
+
 ### Direct URL (auto-decrypt)
 
 **Query params:**
@@ -34,6 +44,18 @@ index.html?url=https://privatebin.net/p/epppa&key=abc
 **Hash format:**
 ```
 index.html#abc@https://privatebin.net/p/epppa
+```
+
+Relative paths also work in direct-load links:
+
+**Query parameter:**
+```
+index.html?url=%2Fnotebook%2Fdata%2Fpeppa&key=abc
+```
+
+**Key and resource hash:**
+```
+index.html#abc@../notebook/data/peppa
 ```
 
 **Inline Data format:**

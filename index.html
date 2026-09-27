@@ -1547,7 +1547,7 @@
                 }
             }
 
-            async function attemptDecryption(data, key, password) {
+            async function attemptDecryption(data, key, password, resolvedUrl) {
                 var decryptedStr = await decipher(keyFromBase58(key), password, [data.ct, data.adata]);
                 function parse(obj) {
                     if (Array.isArray(obj)) { currentNotes = Array.isArray(obj[0]) ? obj[0] : [obj[0]]; currentMetadata = obj[1] || {}; return true; }
@@ -1595,12 +1595,34 @@
                 updateUI();
                 if (currentNotes.length > 0) displayNote(0);
                 var urlInputText = document.getElementById('url').value.trim();
-                var shareUrl = window.location.origin + window.location.pathname + '#' + key + '@' + encodeURIComponent(urlInputText);
+                var shareSource = resolvedUrl && (urlInputText.startsWith('/') || urlInputText.startsWith('../'))
+                    ? resolvedUrl.href
+                    : urlInputText;
+                var shareUrl = window.location.origin + window.location.pathname + '#' + key + '@' + encodeURIComponent(shareSource);
                 window.history.replaceState(null, '', shareUrl);
             }
 
-            async function getNotebookData(url) {
-                if (url.startsWith('http')) return await fetchPrivateBin(url);
+            function resolveRemoteUrl(url) {
+                if (url.startsWith('//')) throw new Error('Protocol-relative URLs are not supported');
+                var isRelativePath = url.startsWith('/') || url.startsWith('../');
+                var isHttpUrl = /^https?:/i.test(url);
+                if (!isRelativePath && !isHttpUrl) return null;
+
+                var resolved;
+                try {
+                    resolved = isRelativePath ? new URL(url, window.location.href) : new URL(url);
+                } catch (e) {
+                    throw new Error('Invalid HTTP or HTTPS URL');
+                }
+                if ((resolved.protocol !== 'http:' && resolved.protocol !== 'https:') || !resolved.hostname) {
+                    throw new Error('URL must resolve to a valid HTTP or HTTPS address');
+                }
+                return resolved;
+            }
+
+            async function getNotebookData(url, resolvedUrl) {
+                resolvedUrl = resolvedUrl || resolveRemoteUrl(url);
+                if (resolvedUrl) return await fetchPrivateBin(resolvedUrl.href);
                 try {
                     var normalized = url.replace(/-/g, '+').replace(/_/g, '/').replace(/\./g, '/');
                     while (normalized.length % 4 !== 0) normalized += '=';
@@ -1610,7 +1632,7 @@
                 }
             }
 
-            function showPasswordModal(url, key) {
+            function showPasswordModal(url, key, resolvedUrl) {
                 var modal = document.getElementById('passwordModal');
                 var submitBtn = document.getElementById('modalSubmitBtn');
                 var pwdInput = document.getElementById('modalPassword');
@@ -1624,8 +1646,8 @@
                     submitBtn.disabled = true; submitBtn.innerHTML = '<span class="loading"></span>Decrypting...';
                     errEl.style.display = 'none';
                     try {
-                        var data = await getNotebookData(url);
-                        await attemptDecryption(data, key, password);
+                        var data = await getNotebookData(url, resolvedUrl);
+                        await attemptDecryption(data, key, password, resolvedUrl);
                     } catch (err) {
                         _decryptionRetryCount++;
                         if (_decryptionRetryCount >= _MAX_RETRIES) {
@@ -1660,14 +1682,15 @@
                     var btn = document.getElementById('decryptBtn');
                     btn.disabled = true; btn.innerHTML = '<span class="loading"></span>Decrypting...';
                     try {
-                        var data = await getNotebookData(url);
-                        if (!key && url.startsWith('http')) { try { key = new URL(url).hash.substring(1); } catch (e) { } }
+                        var resolvedUrl = resolveRemoteUrl(url);
+                        var data = await getNotebookData(url, resolvedUrl);
+                        if (!key && resolvedUrl) key = resolvedUrl.hash.substring(1);
                         if (!key) throw new Error('No key found');
                         _decryptionRetryCount = 0;
-                        await attemptDecryption(data, key, pwdInput.value);
+                        await attemptDecryption(data, key, pwdInput.value, resolvedUrl);
                     } catch (err) {
                         if (err.name === 'OperationError' || err.message.includes('decryption failed')) {
-                            showPasswordModal(url, key);
+                            showPasswordModal(url, key, resolvedUrl);
                         } else {
                             errEl.textContent = err.message || 'Error';
                             errEl.style.display = 'block';

@@ -1,0 +1,7 @@
+# List of PrivateBin servers for pNote fallback
+# Edit to add/remove/arrange as desired
+servers:
+  - https://privatebin.net/
+  - https://paste.debian.net/
+  - https://bin.nixnet.services/
+  - https://paste.publicsec.de/

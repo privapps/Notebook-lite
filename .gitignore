@@ -1,2 +1,6 @@
 __pycache__
 .venv/
+opencode.json
+.agents
+.scratch
+.archive
