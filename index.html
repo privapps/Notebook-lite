@@ -741,6 +741,8 @@
             font-weight: 500;
             letter-spacing: -0.025em;
             line-height: 1.2;
+            max-width: calc(100% - 180px);
+            overflow-wrap: anywhere;
             text-align: center;
         }
 
@@ -846,6 +848,17 @@
             justify-content: center;
             max-width: 1400px;
             margin: -12px auto 32px;
+        }
+
+        .single-note-actions {
+            display: flex;
+            justify-content: flex-end;
+            max-width: 1400px;
+            margin: 0 auto 16px;
+        }
+
+        .single-note-actions[hidden] {
+            display: none;
         }
 
         .edit-in-notebook-link {
@@ -1184,9 +1197,8 @@
                 <div class="content-header">
                     <h1 id="notebookName" style="margin: 0;"></h1>
                     <div class="content-header-right">
-                        <button id="notesMenuToggle" class="notes-menu-toggle" type="button" aria-controls="notesSidebar" aria-expanded="false">
+                        <button id="notesMenuToggle" class="notes-menu-toggle" type="button" aria-label="Toggle notes menu" aria-controls="notesSidebar" aria-expanded="false">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-                            Notes
                         </button>
                         <a href="https://github.com/privapps/notebook-lite" target="_blank" class="github-link" aria-label="View on GitHub">
                             <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
@@ -1201,6 +1213,7 @@
                 </div>
                 <p id="notebookDescription" style="display: none;">
                 </p>
+                <div id="singleNoteActions" class="single-note-actions" hidden></div>
                 <div class="note-card">
                     <h2 id="noteTitle" class="note-title"></h2>
                     <div id="noteMeta" class="note-meta"></div>
@@ -1483,6 +1496,7 @@
             function displayNote(index) {
                 var note = currentNotes[index];
                 if (!note) return;
+                document.title = note.name || currentMetadata.name || 'Notebook Lite';
                 var noteTitleEl = document.getElementById('noteTitle');
                 if (note.name) {
                     noteTitleEl.textContent = note.name;
@@ -1535,6 +1549,19 @@
                 if (notesMenuToggle) notesMenuToggle.hidden = currentNotes.length <= 1;
                 if (currentNotes.length <= 1) closeNotesMenu();
 
+                var singleNoteActions = document.getElementById('singleNoteActions');
+                if (singleNoteActions) {
+                    singleNoteActions.innerHTML = '';
+                    singleNoteActions.hidden = true;
+                    if (currentNotes.length === 1 && currentNotebookSnapshot) {
+                        var singleNoteEditLink = createEditNotebookLink(currentNotebookSnapshot);
+                        if (singleNoteEditLink) {
+                            singleNoteActions.appendChild(singleNoteEditLink);
+                            singleNoteActions.hidden = false;
+                        }
+                    }
+                }
+
                 var sidebarList = document.getElementById('sidebarNoteList');
                 if (sidebarList) {
                     sidebarList.innerHTML = '';
@@ -1553,21 +1580,15 @@
                         return `
                         <div class="view-all-item">
                             <h2>${escapeHtml(note.name || 'Untitled')}</h2>
-                            <div>${sanitizeHtml(marked.parse(note.content || ''))}</div>
+                            <div class="note-content">${sanitizeHtml(marked.parse(note.content || ''))}</div>
                         </div>
                     `;
                     }).join('');
                     if (currentNotebookSnapshot) {
-                        var editNotebookUrl = createNotebookWebUrl(currentNotebookSnapshot);
-                        if (editNotebookUrl) {
+                        var editNotebookLink = createEditNotebookLink(currentNotebookSnapshot);
+                        if (editNotebookLink) {
                             var actions = document.createElement('div');
                             actions.className = 'view-all-actions';
-                            var editNotebookLink = document.createElement('a');
-                            editNotebookLink.className = 'edit-in-notebook-link';
-                            editNotebookLink.href = editNotebookUrl;
-                            editNotebookLink.target = '_blank';
-                            editNotebookLink.rel = 'noopener noreferrer';
-                            editNotebookLink.textContent = 'Edit in Notebook';
                             actions.appendChild(editNotebookLink);
                             viewAll.appendChild(actions);
                         }
@@ -1585,6 +1606,18 @@
                 } catch (e) {
                     return null;
                 }
+            }
+
+            function createEditNotebookLink(snapshot) {
+                var editNotebookUrl = createNotebookWebUrl(snapshot);
+                if (!editNotebookUrl) return null;
+                var editNotebookLink = document.createElement('a');
+                editNotebookLink.className = 'edit-in-notebook-link';
+                editNotebookLink.href = editNotebookUrl;
+                editNotebookLink.target = '_blank';
+                editNotebookLink.rel = 'noopener noreferrer';
+                editNotebookLink.textContent = 'Edit in Notebook';
+                return editNotebookLink;
             }
 
             async function attemptDecryption(data, key, password, resolvedUrl) {
